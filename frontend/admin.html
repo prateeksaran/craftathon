@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Military Asset Management</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-color: #1f1f1f;
+            color: #ddd;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background-color: #181818;
+            border: 1px solid #333;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+            border-radius: 8px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #444;
+            padding-bottom: 0.75rem;
+        }
+
+        .admin-header h1 {
+            color: gold;
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .admin-header a {
+            color: #c41e3a;
+            text-decoration: none;
+            font-size: 0.95rem;
+            border: 1px solid #c41e3a;
+            background: rgba(196, 30, 58, 0.15);
+            padding: 0.45rem 0.8rem;
+            border-radius: 4px;
+        }
+
+        .section {
+            margin-top: 1rem;
+            background-color: #202020;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 1rem;
+        }
+
+        .section h2 {
+            margin-top: 0;
+            color: #f1c40f;
+        }
+
+        .live-feed-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .live-feed-list li {
+            border-bottom: 1px solid #333;
+            padding: 0.6rem 0;
+            color: #fff;
+        }
+
+        .live-feed-list li:last-child {
+            border-bottom: none;
+        }
+
+        .settings-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            color: #fff;
+        }
+
+        .settings-table th,
+        .settings-table td {
+            border: 1px solid #333;
+            padding: 0.6rem 0.8rem;
+            text-align: left;
+        }
+
+        .settings-table th {
+            background: #2f2f2f;
+            color: gold;
+        }
+
+        .settings-input {
+            width: 100%;
+            background: #171717;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 0.35rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .primary-btn {
+            background: #c41e3a;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 0.95rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 0.4rem;
+            font-weight: 700;
+        }
+
+        .primary-btn:hover {
+            background-color: #a01830;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>Admin Dashboard</h1>
+            <a href="index.html">Back to User Login</a>
+        </div>
+
+        <div class="section" id="live-feed-section">
+            <h2>Live Feed</h2>
+            <ul class="live-feed-list" id="liveFeed">
+                <li>No events yet. Waiting for updates...</li>
+            </ul>
+        </div>
+
+        <div class="section" id="global-settings-section">
+            <h2>Global Settings</h2>
+            <table class="settings-table">
+                <thead>
+                    <tr>
+                        <th>Setting</th>
+                        <th>Value</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>System Status</td>
+                        <td><input id="statusInput" class="settings-input" value="Operational"></td>
+                        <td><button class="primary-btn" id="saveStatusBtn">Save</button></td>
+                    </tr>
+                    <tr>
+                        <td>Maintenance Mode</td>
+                        <td><input id="maintenanceInput" class="settings-input" value="Off"></td>
+                        <td><button class="primary-btn" id="saveMaintenanceBtn">Save</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p id="settingsMessage" style="margin-top:.8rem;color:#ddd;"></p>
+        </div>
+    </div>
+
+    <script>
+        const liveFeedEl = document.getElementById('liveFeed');
+
+        function appendLiveFeed(message) {
+            const li = document.createElement('li');
+            li.textContent = `${new Date().toLocaleTimeString()} - ${message}`;
+            if (liveFeedEl.children.length === 1 && liveFeedEl.children[0].textContent.includes('No events')) {
+                liveFeedEl.innerHTML = '';
+            }
+            liveFeedEl.prepend(li);
+        }
+
+        const ws = new WebSocket('ws://localhost:8000/ws/admin');
+
+        ws.addEventListener('open', () => {
+            appendLiveFeed('Connected to admin WebSocket channel.');
+        });
+
+        ws.addEventListener('message', (event) => {
+            appendLiveFeed(event.data);
+        });
+
+        ws.addEventListener('close', () => {
+            appendLiveFeed('WebSocket connection closed.');
+        });
+
+        ws.addEventListener('error', (error) => {
+            appendLiveFeed('WebSocket error, real-time feed unavailable.');
+            console.error('WebSocket error:', error);
+        });
+
+        const settingsMessage = document.getElementById('settingsMessage');
+        const statusInput = document.getElementById('statusInput');
+        const maintenanceInput = document.getElementById('maintenanceInput');
+
+        document.getElementById('saveStatusBtn').addEventListener('click', () => {
+            settingsMessage.textContent = 'Global status saved: ' + statusInput.value;
+            settingsMessage.style.color = '#f1c40f';
+        });
+
+        document.getElementById('saveMaintenanceBtn').addEventListener('click', () => {
+            settingsMessage.textContent = 'Maintenance mode saved: ' + maintenanceInput.value;
+            settingsMessage.style.color = '#f1c40f';
+        });
+    </script>
+</body>
+</html>

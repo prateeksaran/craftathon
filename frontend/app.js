@@ -76,32 +76,75 @@ function handleLogin(e) {
         return;
     }
 
-    // Mock authentication (replace with actual FastAPI call)
-    if (validateCredentials(militaryId, accessCode)) {
-        AppState.isAuthenticated = true;
-        AppState.currentUser = {
-            militaryId: militaryId,
-            accessLevel: getAccessLevel(militaryId),
-            loginTime: new Date()
-        };
+    // Backend authentication call (if available)
+    fetch('http://localhost:8000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ militaryId, accessCode })
+    })
+    .then(async response => {
+        if (!response.ok) {
+            throw new Error('Invalid credentials');
+        }
+        return response.json();
+    })
+    .then(data => {
+        const role = data.role || 'user';
+        if (role === 'admin') {
+            window.location.href = 'admin.html';
+            return;
+        }
 
-        // Hide login overlay and show main app
-        const loginOverlay = document.getElementById('loginOverlay');
-        const mainApp = document.getElementById('mainApp');
+        if (role === 'user') {
+            AppState.isAuthenticated = true;
+            AppState.currentUser = {
+                militaryId: militaryId,
+                accessLevel: getAccessLevel(militaryId),
+                loginTime: new Date()
+            };
 
-        loginOverlay.classList.add('hidden');
-        mainApp.classList.remove('hidden');
+            // Hide login overlay and show main app
+            const loginOverlay = document.getElementById('loginOverlay');
+            const mainApp = document.getElementById('mainApp');
 
-        // Update user display
-        updateUserDisplay();
+            loginOverlay.classList.add('hidden');
+            mainApp.classList.remove('hidden');
 
-        // Load dashboard
-        loadDashboard();
+            // Update user display
+            updateUserDisplay();
 
-        showNotification(`Welcome, ${militaryId}!`, 'success');
-    } else {
-        showNotification('Invalid Military ID or Access Code', 'error');
-    }
+            // Load dashboard
+            loadDashboard();
+
+            showNotification(`Welcome, ${militaryId}!`, 'success');
+            return;
+        }
+
+        showNotification('Unauthorized role', 'error');
+    })
+    .catch(err => {
+        // Fallback to existing local mock behavior when backend is unavailable
+        if (validateCredentials(militaryId, accessCode)) {
+            AppState.isAuthenticated = true;
+            AppState.currentUser = {
+                militaryId: militaryId,
+                accessLevel: getAccessLevel(militaryId),
+                loginTime: new Date()
+            };
+
+            const loginOverlay = document.getElementById('loginOverlay');
+            const mainApp = document.getElementById('mainApp');
+
+            loginOverlay.classList.add('hidden');
+            mainApp.classList.remove('hidden');
+
+            updateUserDisplay();
+            loadDashboard();
+            showNotification(`Welcome, ${militaryId}!`, 'success');
+        } else {
+            showNotification('Invalid Military ID or Access Code', 'error');
+        }
+    });
 }
 
 function validateCredentials(militaryId, accessCode) {

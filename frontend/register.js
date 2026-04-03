@@ -114,6 +114,27 @@ registrationForm.addEventListener('submit', function(e) {
         // Store in localStorage for demo
         localStorage.setItem('registrationData', JSON.stringify(formData));
 
+        // Send registration data to backend and redirect on success
+        fetch('http://localhost:8000/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: name,
+                email: '',
+                password: document.getElementById('password').value
+            })
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = 'index.html';
+            } else {
+                console.warn('Backend registration failed');
+            }
+        }).catch(error => {
+            console.warn('Backend unavailable, continue local flow:', error);
+        });
+
         // Show modal
         modal.style.display = 'block';
         

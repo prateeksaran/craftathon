@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Military Registration Portal</title>
+    <link rel="stylesheet" href="register.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">       
+            <h1>Registration Portal</h1>
+            <p>Military Personnel System</p>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            Registration successful! Your credentials have been saved.
+        </div>
+
+        <form id="registrationForm">
+            <div class="code-section" id="restrictedMessage" style="display: none; background-color: #2a2a1a; border-color: #8b7500;">
+                <p style="color: #d4af37;">Access Restriction Notice</p>
+                <div style="color: #888; font-size: 12px;">Registration code is only available for Major, Lieutenant, or Admin roles.</div>
+            </div>
+
+            <!-- Name Field -->
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        placeholder="Enter your full name"
+                        required
+                    >
+                </div>
+                <span class="error-message" id="nameError">Please enter a valid name</span>
+            </div>
+
+            <!-- Badge Number -->
+            <div class="form-group">
+                <label for="badgeNumber">Badge Number</label>
+                <div class="input-group">
+                    <input 
+                        type="number" 
+                        id="badgeNumber" 
+                        name="badgeNumber" 
+                        placeholder="Enter your badge number"
+                        required
+                    >
+                </div>
+                <span class="error-message" id="badgeError">Please enter a valid badge number</span>
+            </div>
+
+            <!-- Rank/Role Dropdown -->
+            <div class="form-group">
+                <label for="rank">Role</label>
+                <select id="rank" name="rank" required>
+                    <option value="">-- Select Role --</option>
+                    <option value="sepoy">Sepoy</option>
+                    <option value="captain">Captain</option>
+                    <option value="major">Major</option>
+                    <option value="lieutenant">Lieutenant</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <span class="error-message" id="rankError">Please select a role</span>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <label for="password">Official Password</label>
+                <div class="input-group">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Enter password"
+                        required
+                    >
+                </div>
+                <span class="error-message" id="passwordError">Password must be at least 8 characters</span>
+            </div>
+
+            <!-- Confirm Password Field -->
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <div class="input-group">
+                    <input 
+                        type="password" 
+                        id="confirmPassword" 
+                        name="confirmPassword" 
+                        placeholder="Confirm password"
+                        required
+                    >
+                </div>
+                <span class="error-message" id="confirmError">Passwords do not match</span>
+            </div>
+
+            <!-- Buttons -->
+            <div class="button-group">
+                <button type="submit" class="btn-submit">Register</button>
+                <button type="reset" class="btn-reset">Clear</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Registration Success Modal -->
+    <div id="registrationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Registration Complete</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="credential-item">
+                    <label>Rank:</label>
+                    <span id="modalRank"></span>
+                </div>
+                <div class="credential-item">
+                    <label>Special Code:</label>
+                    <span id="modalCode"></span>
+                </div>
+                <div class="credential-item">
+                    <label>Username:</label>
+                    <span id="modalUsername"></span>
+                </div>
+                <div class="credential-item">
+                    <label>Password:</label>
+                    <span id="modalPassword"></span>
+                </div>
+                <div class="modal-note">
+                    <p>Keep these credentials secure. You will need them to access the system.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="closeModalBtn" class="btn-modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="register.js"></script>
+</body>
+</html>

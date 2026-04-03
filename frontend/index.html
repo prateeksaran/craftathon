@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Military Asset Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Loading indicator -->
+    <div id="loadingIndicator" class="loading-indicator hidden">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+    <!-- Login Overlay -->
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>MILITARY ASSET MANAGEMENT</h1>
+                <p class="login-subtitle">Secure Access Portal</p>
+            </div>
+
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="militaryId">Military ID</label>
+                    <input type="text" id="militaryId" name="militaryId" placeholder="Enter your Military ID" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="accessCode">Access Code</label>
+                    <input type="password" id="accessCode" name="accessCode" placeholder="Enter your Access Code" required>
+                </div>
+
+                <div class="login-actions">
+                    <button type="submit" class="login-btn">AUTHENTICATE</button>
+                    <button type="button" class="register-btn">REGISTER</button>
+                </div>
+            </form>
+
+            <p class="login-disclaimer">Authorized Personnel Only</p>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="mainApp" class="main-app hidden">
+        <!-- Fixed Navbar -->
+        <nav class="navbar">
+            <div class="navbar-content">
+                <div class="navbar-logo">
+                    <span class="logo-icon">⚙️</span>
+                    <span class="logo-text">MILITARY ASSET MANAGEMENT</span>
+                </div>
+                <div class="navbar-user">
+                    <span class="user-badge" id="userDisplay">USER</span>
+                    <button class="audit-btn" id="auditBtn">AUDIT LOGS</button>
+                    <button class="logout-btn" id="logoutBtn">LOG OUT</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Floating Tabs Navigation -->
+        <div class="floating-tabs">
+            <button class="floating-tab active" data-tab="inventory">
+                <span class="tab-icon">📦</span>
+                <span class="tab-label">Inventory</span>
+            </button>
+            <button class="floating-tab" data-tab="deployment">
+                <span class="tab-icon">🚁</span>
+                <span class="tab-label">Deployment</span>
+            </button>
+            <button class="floating-tab" data-tab="maintenance">
+                <span class="tab-icon">🔧</span>
+                <span class="tab-label">Maintenance</span>
+            </button>
+            <button class="floating-tab" data-tab="disabled-units">
+                <span class="tab-icon">⛔</span>
+                <span class="tab-label">Disabled Units</span>
+            </button>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="content-wrapper">
+            <!-- Inventory Section -->
+            <section id="inventory" class="content-section active">
+                <div class="section-header">
+                    <h2>Inventory Management</h2>
+                    <p>Track and manage all military assets</p>
+                </div>
+                <div class="card-grid">
+                    <div class="content-card">
+                        <h3>Total Assets</h3>
+                        <p class="card-value">2,847</p>
+                        <p class="card-status">Operational</p>
+                    </div>
+                    <div class="content-card">
+                        <h3>Active Units</h3>
+                        <p class="card-value">1,203</p>
+                        <p class="card-status">In Service</p>
+                    </div>
+                    <div class="content-card">
+                        <h3>Maintenance Queue</h3>
+                        <p class="card-value">156</p>
+                        <p class="card-status">Pending</p>
+                    </div>
+                </div>
+                <div class="placeholder-content">
+                    <p>📌 Inventory section ready for implementation</p>
+                    <p>Use JavaScript or FastAPI to populate asset data here</p>
+                </div>
+            </section>
+
+            <!-- Deployment Section -->
+            <section id="deployment" class="content-section hidden">
+                <div class="section-header">
+                    <h2>Deployment Operations</h2>
+                    <p>Monitor active deployments and operations</p>
+                </div>
+                <div class="card-grid">
+                    <div class="content-card">
+                        <h3>Active Missions</h3>
+                        <p class="card-value">8</p>
+                        <p class="card-status">In Progress</p>
+                    </div>
+                    <div class="content-card">
+                        <h3>Units Deployed</h3>
+                        <p class="card-value">524</p>
+                        <p class="card-status">Deployed</p>
+                    </div>
+                    <div class="content-card">
+                        <h3>Available for Deploy</h3>
+                        <p class="card-value">679</p>
+                        <p class="card-status">Ready</p>
+                    </div>
+                </div>
+                <div class="placeholder-content">
+                    <p>🎯 Deployment section ready for implementation</p>
+                    <p>Use JavaScript or FastAPI to manage operations here</p>
+                </div>
+            </section>
+
+            <!-- Maintenance Section -->
+            <section id="maintenance" class="content-section hidden">
+                <div class="section-header">
+                    <h2>Maintenance Operations</h2>
+                    <p>Schedule and track maintenance activities</p>
+                </div>
+                <div class="card-grid">
+                    <div class="content-card">
+                        <h3>Scheduled Maintenance</h3>
+                        <p class="card-value">42</p>
+                        <p class="card-status">Upcoming</p>
+                    </div>
+                    <div class="content-card">
+                        <h3>Under Maintenance</h3>
+                        <p class="card-value">156</p>
+                        <p class="card-status">In Progress</p>
+                    </div>
+                    <div class="content-card">
+                        <h3>Completion Rate</h3>
+                        <p class="card-value">94%</p>
+                        <p class="card-status">On Schedule</p>
+                    </div>
+                </div>
+                <div class="placeholder-content">
+                    <p>🔧 Maintenance section ready for implementation</p>
+                    <p>Use JavaScript or FastAPI to manage maintenance workflows here</p>
+                </div>
+            </section>
+
+            <!-- Disabled Units Section -->
+            <section id="disabled-units" class="content-section hidden">
+                <div class="section-header">
+                    <h2>Disabled Units</h2>
+                    <p>Monitor and manage deactivated or non-operational assets</p>
+                </div>
+                <div class="card-grid">
+                    <div class="content-card">
+                        <h3>Total Disabled</h3>
+                        <p class="card-value">89</p>
+                        <p class="card-status">Inactive</p>
+                    </div>
+                    <div class="content-card">
+                        <h3>Awaiting Repair</h3>
+                        <p class="card-value">34</p>
+                        <p class="card-status">Pending</p>
+                    </div>
+                    <div class="content-card">
+                        <h3>Awaiting Retirement</h3>
+                        <p class="card-value">55</p>
+                        <p class="card-status">Deactivated</p>
+                    </div>
+                </div>
+                <div class="placeholder-content">
+                    <p>⛔ Disabled Units section ready for implementation</p>
+                    <p>Use JavaScript or FastAPI to manage disabled asset information here</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

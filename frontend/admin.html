@@ -160,6 +160,17 @@
             </table>
             <p id="settingsMessage" style="margin-top:.8rem;color:#ddd;"></p>
         </div>
+
+        <div class="section" id="maintenance-task-section">
+            <h2>Add Maintenance Task</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.75rem; margin-bottom: 0.8rem;">
+                <input type="text" id="taskId" class="settings-input" placeholder="Asset ID" required>
+                <input type="text" id="taskName" class="settings-input" placeholder="Task Name" required>
+                <input type="text" id="taskStatus" class="settings-input" placeholder="Status" required>
+            </div>
+            <button class="primary-btn" onclick="sendUpdate()">Send Update</button>
+            <p id="taskMessage" style="margin-top:0.7rem;color:#ddd;"></p>
+        </div>
     </div>
 
     <script>
@@ -206,6 +217,42 @@
             settingsMessage.textContent = 'Maintenance mode saved: ' + maintenanceInput.value;
             settingsMessage.style.color = '#f1c40f';
         });
+
+        function sendUpdate() {
+            const id = document.getElementById('taskId').value.trim();
+            const name = document.getElementById('taskName').value.trim();
+            const status = document.getElementById('taskStatus').value.trim();
+            const taskMessage = document.getElementById('taskMessage');
+
+            if (!id || !name || !status) {
+                taskMessage.textContent = 'Please complete all fields before sending.';
+                taskMessage.style.color = '#e74c3c';
+                return;
+            }
+
+            const payload = { id, name, status };
+
+            fetch('http://localhost:8000/api/update-maintenance', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to send maintenance task');
+                }
+                taskMessage.textContent = 'Maintenance task sent.';
+                taskMessage.style.color = '#f1c40f';
+
+                document.getElementById('taskId').value = '';
+                document.getElementById('taskName').value = '';
+                document.getElementById('taskStatus').value = '';
+            })
+            .catch(error => {
+                taskMessage.textContent = 'Error sending task: ' + error.message;
+                taskMessage.style.color = '#e74c3c';
+            });
+        }
     </script>
 </body>
 </html>

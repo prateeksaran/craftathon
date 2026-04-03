@@ -518,6 +518,17 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
+.realtime-highlight {
+    animation: flashRow 1.2s ease-in-out;
+    background-color: rgba(241, 196, 15, 0.2);
+}
+
+@keyframes flashRow {
+    0% { background-color: rgba(241, 196, 15, 0.8); }
+    50% { background-color: rgba(241, 196, 15, 0.2); }
+    100% { background-color: transparent; }
+}
+
 .data-table table {
     width: 100%;
     border-collapse: collapse;

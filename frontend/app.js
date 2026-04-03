@@ -58,6 +58,9 @@ function initializeEventListeners() {
     floatingTabs.forEach(tab => {
         tab.addEventListener('click', handleTabSwitch);
     });
+
+    // Initialize real-time maintenance websocket
+    initMaintenanceWebSocket();
 }
 
 // ============================================
@@ -234,6 +237,46 @@ function handleTabSwitch(e) {
         loadTabData(tabName);
     }
 }
+
+function initMaintenanceWebSocket() {
+    const ws = new WebSocket('ws://localhost:8000/ws/maintenance');
+
+    ws.addEventListener('open', () => {
+        console.log('Connected to maintenance websocket');
+    });
+
+    ws.addEventListener('message', (event) => {
+        try {
+            const payload = JSON.parse(event.data);
+            const { id, name, status } = payload;
+            const tableBody = document.getElementById('maintenanceTableBody');
+            if (!tableBody) return;
+
+            if (tableBody.children.length === 1 && tableBody.children[0].textContent.includes('Waiting for live maintenance updates')) {
+                tableBody.innerHTML = '';
+            }
+
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${id}</td><td>${name}</td><td>${status}</td>`;
+            row.classList.add('realtime-highlight');
+
+            tableBody.appendChild(row);
+
+            setTimeout(() => row.classList.remove('realtime-highlight'), 1200);
+        } catch (err) {
+            console.error('Invalid maintenance websocket message', err);
+        }
+    });
+
+    ws.addEventListener('close', () => {
+        console.log('Maintenance websocket closed');
+    });
+
+    ws.addEventListener('error', (err) => {
+        console.error('Maintenance websocket error', err);
+    });
+}
+
 
 // ============================================
 // DATA LOADING & MANAGEMENT
